@@ -10,7 +10,7 @@ jobs:
       - name: Get code
         uses: actions/checkout@v3
       - name: Load & cache dependencies
-        uses: ./.github/workflowsactions/cached-deps
+        uses: ./.github/workflows/actions/cached-deps
       # - name: Cache dependencies
       #   id: cache
       #   uses: actions/cache@v3
@@ -26,16 +26,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get code
-        uses: ./.github/workflows/actions/cached-deps
-      # - name: Cache dependencies
-      #   id: cache
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: node_modules
-      #     key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
-      # - name: Install dependencies
-      #   if: steps.cache.outputs.cache-hit != 'true'
-      #   run: npm ci
+        uses: actions/checkout@v3
+      - name: Cache dependencies
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
       - name: Test code
         id: run-tests
         run: npm run test
@@ -53,13 +53,13 @@ jobs:
         uses: actions/checkout@v3
       - name: Cache dependencies
         id: cache
-        uses: ./.github/workflows/actions/cached-deps
-      #   with:
-      #     path: node_modules
-      #     key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
-      # - name: Install dependencies
-      #   if: steps.cache.outputs.cache-hit != 'true'
-      #   run: npm ci
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
       - name: Build website
         run: npm run build
       - name: Upload artifacts
